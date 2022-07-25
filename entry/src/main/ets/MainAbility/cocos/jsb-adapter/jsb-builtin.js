@@ -3352,12 +3352,12 @@ function inject() {
   window.KeyboardEvent = require('./KeyboardEvent');
   window.DeviceMotionEvent = require('./DeviceMotionEvent'); // ES6
 
-  var m_fetch = require('./fetch');
-
-  window.fetch = m_fetch.fetch;
-  window.Headers = m_fetch.Headers;
-  window.Request = m_fetch.Request;
-  window.Response = m_fetch.Response; // const PORTRAIT = 0;
+//  var m_fetch = require('./fetch');
+//
+//  window.fetch = m_fetch.fetch;
+//  window.Headers = m_fetch.Headers;
+//  window.Request = m_fetch.Request;
+//  window.Response = m_fetch.Response; // const PORTRAIT = 0;
   // const LANDSCAPE_LEFT = -90;
   // const PORTRAIT_UPSIDE_DOWN = 180;
   // const LANDSCAPE_RIGHT = 90;
