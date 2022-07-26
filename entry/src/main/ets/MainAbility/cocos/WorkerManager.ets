@@ -15,8 +15,7 @@
 
 import worker from '@ohos.worker';
 import {Constants} from '../common/Constants'
-import console, { log } from '../cocos/log_utils'
-
+import {log} from '../cocos/log_utils'
 export class WorkerManager {
     private static instance: WorkerManager;
     private cocosWorker: any;
