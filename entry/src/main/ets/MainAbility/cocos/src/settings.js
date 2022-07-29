@@ -13,7 +13,7 @@ module.exports = {
     "remoteBundles": [],
     "hasResourcesBundle": false,
     "hasStartSceneBundle": false,
-    "launchScene": "db://assets/scene/airplane.scene",
+    "launchScene": "db://assets/scene.scene",
     "jsList": [],
     "moduleIds": [],
     "renderPipeline": "",
