@@ -3977,7 +3977,7 @@ jsbEngine()({
               refMap.push(e);
             }
           } else {
-            dataView.setBigUint64(startPos + offset, NULL_PTR, isLittleEndian);
+            dataView.setBigUint64(startPos + offset, BigInt(NULL_PTR), isLittleEndian);
           }
 
           offset += 8;
