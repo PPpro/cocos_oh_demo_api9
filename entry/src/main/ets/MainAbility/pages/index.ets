@@ -12,25 +12,25 @@ struct Index {
   private context = null;
 
   private cocosWorker = WorkerManager.getInstance().getWorker();
-  private aboutToAppear(): void  {
+  aboutToAppear(): void  {
     console.log('[LIFECYCLE-Index] kee cocos aboutToAppear');
 //    this.cocosWorker.postMessage({type: "JSPageLifecycle", data: "aboutToAppear"});
 //    nativePageLifecycle.aboutToAppear();
   }
 
-  private aboutToDisappear(): void {
+  aboutToDisappear(): void {
     console.log('[LIFECYCLE-Index] kee cocos aboutToDisappear');
 //    this.cocosWorker.postMessage({type: "JSPageLifecycle", data: "aboutToAppear"});
 //    nativePageLifecycle.aboutToDisappear();
   }
 
-  private onPageShow(): void  {
+  onPageShow(): void  {
     console.log('[LIFECYCLE-Page] kee cocos onPageShow');
 //    this.cocosWorker.postMessage({type: "JSPageLifecycle", data: "onPageShow"});
     nativePageLifecycle.onPageShow();
   }
 
-  private onPageHide(): void  {
+  onPageHide(): void  {
     console.log('[LIFECYCLE-Page] kee cocos onPageHide');
 //    this.cocosWorker.postMessage({type: "JSPageLifecycle", data: "onPageHide"});
     nativePageLifecycle.onPageHide();
