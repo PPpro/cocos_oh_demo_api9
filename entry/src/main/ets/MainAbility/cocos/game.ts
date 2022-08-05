@@ -12,10 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { log } from './log_utils'
+import logger, { log } from './log_utils'
 import importMap from './src/import-map.1b3be'
 import resourceManager from '@ohos.resourceManager';
 import { loadModule } from './loadModule';
+
 
 declare const require: any;
 declare const System: any;
@@ -63,6 +64,8 @@ export function launchEngine (): Promise<void> {
         // @ts-ignore
         window.global = window;
         const systemReady = require('./jsb-adapter/sys-ability-polyfill.js');
+        // @ts-ignore
+        window.logger = logger;
         systemReady().then(() => {
             try {
                 require("./jsb-adapter/jsb-builtin.js");

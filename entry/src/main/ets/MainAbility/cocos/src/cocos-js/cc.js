@@ -1,3 +1,6 @@
+const logger = window.logger;
+logger.log('pptest logger test');
+
 console.log('pptest importing cc 1');
 System.register(['./instantiated-1af0bf5b.js'], function (exports) {
     'use strict';
@@ -54291,10 +54294,14 @@ System.register(['./instantiated-1af0bf5b.js'], function (exports) {
                 {
                   const view = this.digitsData;
 
+                  logger.log('pptest logger test 2');
                   for (const id in this._stats) {
                     const stat = this._stats[id];
                     stat.counter.sample(now);
                     const result = stat.counter.human().toString();
+                    if (id === 'fps') {
+                      logger.log('pptest fps: ' + result);
+                    }
 
                     for (let j = _constants.segmentsPerLine - 1; j >= 0; j--) {
                       const index = i * _constants.segmentsPerLine + j;
