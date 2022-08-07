@@ -537,6 +537,8 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 },{}],5:[function(require,module,exports){
 "use strict";
 
+jsb.device = jsb.Device; // cc namespace will be reset to {} in creator, use jsb namespace instead.
+
 const {
   btoa,
   atob
@@ -578,7 +580,6 @@ window.cancelAnimationFrame = function (id) {
 };
 
 function tick(nowMilliSeconds) {
-  // console.log('pptest tick 1');
   if (_firstTick) {
     _firstTick = false;
 
@@ -600,8 +601,6 @@ function tick(nowMilliSeconds) {
       _oldRequestFrameCallback(nowMilliSeconds);
     }
   }
-  
-  // console.log('pptest tick 2');
 }
 
 let _timeoutIDIndex = 0;
@@ -666,20 +665,20 @@ function createTimeoutInfo(prevFuncArgs, isRepeat) {
   return info.id;
 }
 
- window.setTimeout = function (cb) {
-   return createTimeoutInfo(arguments, false);
- };
+window.setTimeout = function (cb) {
+  return createTimeoutInfo(arguments, false);
+};
 
- window.clearTimeout = function (id) {
-   delete _timeoutInfos[id];
- };
+window.clearTimeout = function (id) {
+  delete _timeoutInfos[id];
+};
 
- window.setInterval = function (cb) {
-   return createTimeoutInfo(arguments, true);
- };
+window.setInterval = function (cb) {
+  return createTimeoutInfo(arguments, true);
+};
 
- window.clearInterval = window.clearTimeout;
- window.alert = console.error.bind(console); // File utils (Temporary, won't be accessible)
+window.clearInterval = window.clearTimeout;
+window.alert = console.error.bind(console); // File utils (Temporary, won't be accessible)
 
 if (typeof jsb.FileUtils !== 'undefined') {
   jsb.fileUtils = jsb.FileUtils.getInstance();
@@ -890,6 +889,8 @@ class CanvasRenderingContext2D {
   }
 
   stroke() {
+    this._canvas._dataInner = null;
+
     this._nativeObj.stroke();
   }
 
@@ -898,10 +899,14 @@ class CanvasRenderingContext2D {
   }
 
   fill() {
+    this._canvas._dataInner = null;
+
     this._nativeObj.fill();
   }
 
   _fillImageData(data, width, height, offsetX, offsetY) {
+    this._canvas._dataInner = null;
+
     this._nativeObj._fillImageData(data, width, height, offsetX, offsetY);
   }
 
@@ -910,6 +915,8 @@ class CanvasRenderingContext2D {
   }
 
   clearRect(x, y, width, height) {
+    this._canvas._dataInner = null;
+
     this._nativeObj.clearRect(x, y, width, height);
   }
 
@@ -918,10 +925,14 @@ class CanvasRenderingContext2D {
   }
 
   fillText(text, x, y, maxWidth) {
+    this._canvas._dataInner = null;
+
     this._nativeObj.fillText(text, x, y, maxWidth, this._attris);
   }
 
   strokeText(text, x, y, maxWidth) {
+    this._canvas._dataInner = null;
+
     this._nativeObj.strokeText(text, x, y, maxWidth, this._attris);
   }
 
@@ -930,7 +941,15 @@ class CanvasRenderingContext2D {
   }
 
   fillRect(x, y, width, height) {
+    this._canvas._dataInner = null;
+
     this._nativeObj.fillRect(x, y, width, height, this._attris);
+  }
+
+  fetchData() {
+    if (typeof this._nativeObj.fetchData !== 'undefined') {
+      this._nativeObj.fetchData();
+    }
   }
 
   rotate(angle) {
@@ -966,7 +985,7 @@ class CanvasRenderingContext2D {
 
 
   createImageData(args1, args2) {
-    if (typeof args1 === 'number' && typeof args2 == 'number') {
+    if (typeof args1 === 'number' && typeof args2 === 'number') {
       return new ImageData(args1, args2);
     } else if (args1 instanceof ImageData) {
       return new ImageData(args1.data, args1.width, args1.height);
@@ -1749,18 +1768,18 @@ const DOMRect = require('./DOMRect');
 
 const CanvasRenderingContext2D = require('./CanvasRenderingContext2D');
 
-let clamp = function (value) {
+const clamp = function (value) {
   value = Math.round(value);
   return value < 0 ? 0 : value < 255 ? value : 255;
 };
 
 class CanvasGradient {
   constructor() {
-    console.log("==> CanvasGradient constructor");
+    console.log('==> CanvasGradient constructor');
   }
 
   addColorStop(offset, color) {
-    console.log("==> CanvasGradient addColorStop");
+    console.log('==> CanvasGradient addColorStop');
   }
 
 }
@@ -1786,22 +1805,21 @@ class HTMLCanvasElement extends HTMLElement {
     this._width = width ? Math.ceil(width) : 0;
     this._height = height ? Math.ceil(height) : 0;
     this._context2D = null;
-    this._data = null;
+    this._dataInner = null;
   } //REFINE: implement opts.
 
 
   getContext(name, opts) {
-    var self = this;
+    const self = this;
 
     if (name === '2d') {
       if (!this._context2D) {
         this._context2D = new CanvasRenderingContext2D(this._width, this._height);
-        this._data = new ImageData(this._width, this._height);
         this._context2D._canvas = this;
 
-        this._context2D._setCanvasBufferUpdatedCallback(function (data) {
+        this._context2D._setCanvasBufferUpdatedCallback(data => {
           // FIXME: Canvas's data will take 2x memory size, one in C++, another is obtained by Uint8Array here.
-          self._data = new ImageData(data, self._width, self._height);
+          self._dataInner = new ImageData(data, self._width, self._height);
         });
       }
 
@@ -1811,10 +1829,27 @@ class HTMLCanvasElement extends HTMLElement {
     return null;
   }
 
+  get _data() {
+    if (this._context2D === null) {
+      return null;
+    }
+
+    if (!this._dataInner) {
+      this._context2D.fetchData();
+    }
+
+    return this._dataInner;
+  }
+
+  set _data(data) {
+    this._dataInner = data;
+  }
+
   set width(width) {
     width = Math.ceil(width);
 
     if (this._width !== width) {
+      this._dataInner = null;
       this._width = width;
 
       if (this._context2D) {
@@ -1831,6 +1866,7 @@ class HTMLCanvasElement extends HTMLElement {
     height = Math.ceil(height);
 
     if (this._height !== height) {
+      this._dataInner = null;
       this._height = height;
 
       if (this._context2D) {
@@ -1942,16 +1978,13 @@ class HTMLImageElement extends HTMLElement {
   set src(src) {
     this._src = src;
     if (src === '') return;
-    console.log('pptest jsb loading Image ' + src);
     jsb.loadImage(src, info => {
       if (!info) {
-        console.log('pptest jsb loaded Image 3')
         this._data = null;
         var event = new Event('error');
         this.dispatchEvent(event);
         return;
       }
-      console.log('pptest jsb loaded Image 4')
 
       this.width = this.naturalWidth = info.width;
       this.height = this.naturalHeight = info.height;
@@ -1960,7 +1993,6 @@ class HTMLImageElement extends HTMLElement {
       var event = new Event('load');
       this.dispatchEvent(event);
     });
-    console.log('pptest jsb loading Image 2 ' + src);
   }
 
   get src() {
@@ -3352,12 +3384,12 @@ function inject() {
   window.KeyboardEvent = require('./KeyboardEvent');
   window.DeviceMotionEvent = require('./DeviceMotionEvent'); // ES6
 
-//  var m_fetch = require('./fetch');
-//
-//  window.fetch = m_fetch.fetch;
-//  window.Headers = m_fetch.Headers;
-//  window.Request = m_fetch.Request;
-//  window.Response = m_fetch.Response; // const PORTRAIT = 0;
+  var m_fetch = require('./fetch');
+
+  window.fetch = m_fetch.fetch;
+  window.Headers = m_fetch.Headers;
+  window.Request = m_fetch.Request;
+  window.Response = m_fetch.Response; // const PORTRAIT = 0;
   // const LANDSCAPE_LEFT = -90;
   // const PORTRAIT_UPSIDE_DOWN = 180;
   // const LANDSCAPE_RIGHT = 90;
