@@ -54790,7 +54790,9 @@ System.register([], function (exports, module) {
                     addon(item, presets[item.preset]);
                   }
 
-                  for (const key in item) {
+                  const keys = Object.keys(item);
+                  for (let i = 0; i < keys.length; ++i) {
+                    const key = keys[i];
                     switch (key) {
                       case RequestType.UUID:
                         {
