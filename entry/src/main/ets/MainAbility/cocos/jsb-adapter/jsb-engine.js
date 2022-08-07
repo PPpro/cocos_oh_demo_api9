@@ -2656,8 +2656,8 @@ var originInit = cc.assetManager.init;
 
 cc.assetManager.init = function (options) {
   originInit.call(cc.assetManager, options);
-  initJsbDownloader(options.jsbDownloaderMaxTasks, options.jsbDownloaderTimeout);
-  cacheManager.init();
+  // initJsbDownloader(options.jsbDownloaderMaxTasks, options.jsbDownloaderTimeout);
+  // cacheManager.init();
 };
 
 },{"./jsb-cache-manager":5,"./jsb-fs-utils":9}],13:[function(require,module,exports){
