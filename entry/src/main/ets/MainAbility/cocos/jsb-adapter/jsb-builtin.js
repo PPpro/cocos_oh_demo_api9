@@ -3394,11 +3394,11 @@ function inject() {
   // const PORTRAIT_UPSIDE_DOWN = 180;
   // const LANDSCAPE_RIGHT = 90;
 
-  window.orientation = jsb.device.getDeviceOrientation(); // window.devicePixelRatio is readonly
+  window.orientation = 0; // window.devicePixelRatio is readonly
 
   Object.defineProperty(window, "devicePixelRatio", {
     get: function () {
-      return jsb.device.getDevicePixelRatio ? jsb.device.getDevicePixelRatio() : 1;
+      return 1;
     },
     set: function (_dpr) {
       /* ignore */

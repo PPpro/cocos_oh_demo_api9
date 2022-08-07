@@ -18126,7 +18126,7 @@ System.register([], function (exports, module) {
               }
 
               get devicePixelRatio() {
-                return jsb.device.getDevicePixelRatio() || 1;
+                return 1;
               }
 
               get windowSize() {

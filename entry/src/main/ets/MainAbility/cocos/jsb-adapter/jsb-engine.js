@@ -1497,7 +1497,7 @@ const cacheManager = require('./jsb-cache-manager'); // @ts-expect-error jsb pol
       let node = this._delegate.node;
       let viewScaleX = cc.view._scaleX;
       let viewScaleY = cc.view._scaleY;
-      let dpr = jsb.device.getDevicePixelRatio() || 1;
+      let dpr = 1;
       node.getWorldMatrix(worldMat);
       let transform = node._uiProps.uiTransformComp;
       let vec3 = cc.v3();
