@@ -6,7 +6,7 @@ const commonJSModuleMap: Record<string, Function> = {
     '/src/chunks/bundle.js' () { require('./src/chunks/bundle.js') },
     'workers/assets/main/index.js' () { require('./assets/main/index.js'); },
     '/src/cocos-js/wait-for-ammo-instantiation.js' () { require('./src/cocos-js/wait-for-ammo-instantiation.js'); },
-    '/src/cocos-js/instantiated-1af0bf5b.js' () { require('./src/cocos-js/instantiated-1af0bf5b.js'); }
+    '/src/cocos-js/instantiated-687fb370.js' () { require('./src/cocos-js/instantiated-687fb370.js'); }
 }
 export function loadModule (name: string) {
     const moduleExecutor = commonJSModuleMap[name];
