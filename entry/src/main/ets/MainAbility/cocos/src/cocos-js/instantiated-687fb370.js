@@ -18131,8 +18131,8 @@ System.register([], function (exports, module) {
 
               get windowSize() {
                 const dpr = this.devicePixelRatio;
-                const roundWidth = Math.round(window.innerWidth);
-                const roundHeight = Math.round(window.innerHeight);
+                const roundWidth = Math.round(jsb.device.getInnerWidth());
+                const roundHeight = Math.round(jsb.device.getInnerHeight());
                 return new Size(roundWidth * dpr, roundHeight * dpr);
               }
 

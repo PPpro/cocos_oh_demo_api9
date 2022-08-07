@@ -2075,7 +2075,7 @@ deviceProto.copyTexImagesToTexture = function (texImages, texture, regions) {
 const oldDeviceCreateSwapchainFunc = deviceProto.createSwapchain;
 
 deviceProto.createSwapchain = function (info) {
-  info.windowHandle = window.windowHandler;
+  info.windowHandle = jsb.device.getWindowHandler();
   return oldDeviceCreateSwapchainFunc.call(this, info);
 };
 
